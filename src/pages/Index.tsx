@@ -56,12 +56,12 @@ const Index = () => {
             
             {/* Main title */}
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary tracking-wider">
-              <DecryptText text="NOVOZZO" delay={300} duration={2500} />
+              <DecryptText text="PERCYSIX9" delay={300} duration={2500} />
             </h1>
             
             {/* Tagline */}
             <p className="text-lg md:text-xl text-foreground/80 tracking-[0.3em] uppercase">
-              "<span className="text-primary/90 font-semibold">Big money never comes clean</span>"
+              "<span className="text-primary/90 font-semibold">Nothing is true everything is permitted</span>"
             </p>
             
             {/* Terminal */}
