@@ -199,3 +199,31 @@
 .animate-line-in {
   animation: terminal-line-in 0.2s ease-out forwards;
 }
+
+/* Card scanning animation */
+@keyframes scan-card {
+  0% {
+    top: -10%;
+  }
+  100% {
+    top: 110%;
+  }
+}
+
+.animate-scan-card {
+  animation: scan-card 1.5s ease-in-out infinite;
+}
+
+/* 3D card transforms */
+.preserve-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.rotate-y-10 {
+  transform: rotateY(10deg) rotateX(5deg);
+}
+
+.-rotate-y-10 {
+  transform: rotateY(-10deg) rotateX(-5deg);
+}
