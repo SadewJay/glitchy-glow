@@ -1,11 +1,87 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useEffect } from "react";
+import { Terminal } from "@/components/Terminal";
+import { StatusBadge, ViewCounter, SystemStatus, EncryptionStatus } from "@/components/StatusBadge";
+import { StatsGrid } from "@/components/StatsCard";
+import { CornerBrackets } from "@/components/CornerBrackets";
+import { HeroButton } from "@/components/HeroButton";
+import { ScanlineOverlay } from "@/components/ScanlineOverlay";
+import { ChevronDown } from "lucide-react";
 
 const Index = () => {
+  const [viewCount, setViewCount] = useState(86);
+
+  useEffect(() => {
+    // Simulate view count incrementing
+    const interval = setInterval(() => {
+      setViewCount((prev) => prev + Math.floor(Math.random() * 3));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
+    <div className="relative min-h-screen bg-background overflow-hidden">
+      {/* Background grid */}
+      <div className="fixed inset-0 grid-background opacity-30" />
+      
+      {/* Scan effects */}
+      <ScanlineOverlay />
+      
+      {/* Corner decorations */}
+      <CornerBrackets />
+      
+      {/* Main content */}
+      <div className="relative z-10 min-h-screen flex flex-col">
+        {/* Header status bar */}
+        <header className="flex items-start justify-between p-6 md:p-8">
+          <SystemStatus />
+          <ViewCounter count={viewCount} />
+        </header>
+        
+        {/* Encryption status - top right area */}
+        <div className="absolute top-20 right-6 md:right-8">
+          <EncryptionStatus />
+        </div>
+        
+        {/* Hero Section */}
+        <main className="flex-1 flex flex-col items-center justify-center px-4 py-8">
+          <div className="text-center space-y-8 max-w-4xl mx-auto">
+            {/* Status badge */}
+            <StatusBadge />
+            
+            {/* Main title */}
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary animate-flicker tracking-wider">
+              NOVOZZO
+            </h1>
+            
+            {/* Tagline */}
+            <p className="text-lg md:text-xl text-muted-foreground tracking-[0.3em] uppercase">
+              "<span className="text-foreground">Big money never comes clean</span>"
+            </p>
+            
+            {/* Terminal */}
+            <div className="mt-8">
+              <Terminal />
+            </div>
+            
+            {/* CTA Button */}
+            <div className="mt-8">
+              <HeroButton />
+            </div>
+          </div>
+        </main>
+        
+        {/* Stats Section */}
+        <section className="mt-auto">
+          <StatsGrid />
+          
+          {/* Scroll indicator */}
+          <div className="flex flex-col items-center py-6 gap-2">
+            <span className="text-xs tracking-widest text-muted-foreground uppercase">
+              Scroll to decrypt
+            </span>
+            <ChevronDown className="w-5 h-5 text-muted-foreground animate-bounce" />
+          </div>
+        </section>
       </div>
     </div>
   );
