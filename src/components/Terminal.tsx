@@ -106,10 +106,14 @@ import { useState, useEffect, useRef } from "react";
          {/* Terminal content */}
          <div
            ref={contentRef}
-           className="p-4 min-h-[200px] max-h-[260px] overflow-y-auto font-mono text-xs md:text-sm bg-black/60"
+          className="p-4 font-mono text-xs md:text-sm bg-black/60 overflow-hidden transition-all duration-300 ease-out"
+          style={{
+            minHeight: displayedLines.length === 0 && currentLineIndex === 0 ? "40px" : undefined,
+            maxHeight: "300px",
+          }}
          >
            {displayedLines.map((line, index) => (
-             <div key={index} className="flex items-start gap-2 mb-1 leading-relaxed">
+            <div key={index} className="flex items-start gap-2 mb-1 leading-relaxed animate-line-in">
                <span className="mt-0.5 flex-shrink-0 w-4 text-center">
                  {getPrefix(line.type)}
                </span>
