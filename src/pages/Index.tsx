@@ -5,6 +5,7 @@ import { StatsGrid } from "@/components/StatsCard";
 import { CornerBrackets } from "@/components/CornerBrackets";
 import { HeroButton } from "@/components/HeroButton";
 import { ScanlineOverlay } from "@/components/ScanlineOverlay";
+import { DecryptText } from "@/components/DecryptText";
 import { ChevronDown } from "lucide-react";
 
 const Index = () => {
@@ -49,13 +50,13 @@ const Index = () => {
             <StatusBadge />
             
             {/* Main title */}
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary animate-flicker tracking-wider">
-              NOVOZZO
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary tracking-wider">
+              <DecryptText text="NOVOZZO" delay={300} duration={2500} />
             </h1>
             
             {/* Tagline */}
-            <p className="text-lg md:text-xl text-muted-foreground tracking-[0.3em] uppercase">
-              "<span className="text-foreground">Big money never comes clean</span>"
+            <p className="text-lg md:text-xl text-foreground/80 tracking-[0.3em] uppercase">
+              "<span className="text-primary/90 font-semibold">Big money never comes clean</span>"
             </p>
             
             {/* Terminal */}
@@ -76,7 +77,7 @@ const Index = () => {
           
           {/* Scroll indicator */}
           <div className="flex flex-col items-center py-6 gap-2">
-            <span className="text-xs tracking-widest text-muted-foreground uppercase">
+            <span className="text-xs tracking-widest text-foreground/60 uppercase">
               Scroll to decrypt
             </span>
             <ChevronDown className="w-5 h-5 text-muted-foreground animate-bounce" />
