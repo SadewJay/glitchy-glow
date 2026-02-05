@@ -1,4 +1,4 @@
- import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
  
  const terminalLines = [
    "Initializing secure connection...",
@@ -13,6 +13,8 @@
    const [currentLineIndex, setCurrentLineIndex] = useState(0);
    const [currentText, setCurrentText] = useState("");
    const [showCursor, setShowCursor] = useState(true);
+  const [isBooted, setIsBooted] = useState(false);
+  const terminalRef = useRef<HTMLDivElement>(null);
  
    useEffect(() => {
      const cursorInterval = setInterval(() => {
@@ -21,8 +23,14 @@
      return () => clearInterval(cursorInterval);
    }, []);
  
+  useEffect(() => {
+    // Trigger boot animation after mount
+    const timeout = setTimeout(() => setIsBooted(true), 100);
+    return () => clearTimeout(timeout);
+  }, []);
+
    useEffect(() => {
-     if (currentLineIndex >= terminalLines.length) return;
+    if (!isBooted || currentLineIndex >= terminalLines.length) return;
  
      const currentFullLine = terminalLines[currentLineIndex];
      
@@ -43,27 +51,30 @@
  
    return (
      <div className="w-full max-w-2xl mx-auto">
-       <div className="bg-card border border-border rounded-lg overflow-hidden box-glow-primary">
+      <div 
+        ref={terminalRef}
+        className={`bg-card border border-primary/50 rounded-lg overflow-hidden box-glow-primary ${isBooted ? 'animate-terminal-boot' : 'opacity-0'}`}
+      >
          {/* Terminal header */}
-         <div className="flex items-center gap-2 px-4 py-3 bg-muted/50 border-b border-border">
+        <div className="flex items-center gap-2 px-4 py-3 bg-muted/80 border-b border-primary/30">
            <div className="w-3 h-3 rounded-full bg-red-500" />
            <div className="w-3 h-3 rounded-full bg-yellow-500" />
            <div className="w-3 h-3 rounded-full bg-green-500" />
-           <span className="ml-2 text-sm text-muted-foreground">novozzo@darknet:~</span>
+          <span className="ml-2 text-sm text-primary/80 font-bold">novozzo@darknet:~</span>
          </div>
          
          {/* Terminal content */}
-         <div className="p-4 min-h-[180px] font-mono text-sm">
+        <div className="p-4 min-h-[180px] font-mono text-sm bg-black/40">
            {displayedLines.map((line, index) => (
              <div key={index} className="flex items-center gap-2 mb-1">
-               <span className="text-accent">→</span>
-               <span className="text-foreground">{line}</span>
+              <span className="text-accent text-glow-green">→</span>
+              <span className="text-primary/90 font-medium">{line}</span>
              </div>
            ))}
            {currentLineIndex < terminalLines.length && (
              <div className="flex items-center gap-2">
-               <span className="text-accent">→</span>
-               <span className="text-foreground">
+              <span className="text-accent text-glow-green">→</span>
+              <span className="text-primary font-medium">
                  {currentText}
                 <span 
                   className="inline-block w-2 h-4 bg-primary ml-0.5 transition-opacity"

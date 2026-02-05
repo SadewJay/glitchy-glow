@@ -31,14 +31,14 @@
     --destructive-foreground: 0 0% 98%;
 
     --border: 45 30% 20%;
-    --input: 0 0% 12%;
+    --input: 0 0% 15%;
     --ring: 45 93% 47%;
 
     --radius: 0.5rem;
     
     /* Custom hacker colors */
     --terminal-green: 120 100% 50%;
-    --terminal-amber: 45 100% 50%;
+    --terminal-amber: 45 100% 55%;
     --neon-cyan: 180 100% 50%;
     --grid-line: 45 30% 15%;
   }
@@ -90,7 +90,7 @@
   }
 
   body {
-    @apply bg-background text-foreground font-mono;
+    @apply bg-background text-foreground font-mono antialiased;
   }
 }
 
@@ -139,4 +139,47 @@
 
 .animate-scan {
   animation: scan 8s linear infinite;
+}
+
+/* Decrypt/scramble animation for text */
+@keyframes glitch-text {
+  0%, 100% { 
+    text-shadow: 0 0 10px hsl(var(--primary)), 0 0 20px hsl(var(--primary) / 0.5);
+    transform: translateX(0);
+  }
+  10% { transform: translateX(-2px); }
+  20% { transform: translateX(2px); }
+  30% { transform: translateX(-1px); }
+  40% { transform: translateX(1px); }
+  50% { transform: translateX(0); }
+}
+
+.animate-glitch {
+  animation: glitch-text 0.3s ease-in-out;
+}
+
+/* Terminal box animation */
+@keyframes terminal-boot {
+  0% {
+    opacity: 0;
+    transform: scaleY(0.1) scaleX(0.8);
+    filter: blur(4px);
+  }
+  30% {
+    opacity: 1;
+    transform: scaleY(0.1) scaleX(0.8);
+    filter: blur(2px);
+  }
+  60% {
+    transform: scaleY(1) scaleX(0.8);
+    filter: blur(1px);
+  }
+  100% {
+    transform: scaleY(1) scaleX(1);
+    filter: blur(0);
+  }
+}
+
+.animate-terminal-boot {
+  animation: terminal-boot 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
