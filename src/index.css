@@ -183,3 +183,19 @@
 .animate-terminal-boot {
   animation: terminal-boot 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+
+/* Terminal line appear animation */
+@keyframes terminal-line-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-line-in {
+  animation: terminal-line-in 0.2s ease-out forwards;
+}
