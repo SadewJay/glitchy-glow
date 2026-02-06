@@ -5,12 +5,10 @@ import { CornerBrackets } from "@/components/CornerBrackets";
 import { HeroButton } from "@/components/HeroButton";
 import { ScanlineOverlay } from "@/components/ScanlineOverlay";
 import { DecryptText } from "@/components/DecryptText";
-import { LoadingScreen } from "@/components/LoadingScreen";
 import { SpotifyWidget } from "@/components/SpotifyWidget";
 
 const Index = () => {
   const [viewCount, setViewCount] = useState(86);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // Simulate view count incrementing
@@ -22,9 +20,7 @@ const Index = () => {
 
   return (
     <>
-      {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
-      
-      <div className={`relative min-h-screen bg-background overflow-hidden transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
+      <div className="relative min-h-screen bg-background overflow-hidden">
       {/* Background grid */}
       <div className="fixed inset-0 grid-background opacity-30" />
       
