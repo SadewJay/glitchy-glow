@@ -53,7 +53,7 @@ const Index = () => {
             <StatusBadge />
             
             {/* Main title */}
-            <h1 className="text-5xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary tracking-wider whitespace-nowrap">
+            <h1 className="text-5xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary tracking-wider whitespace-nowrap text-center w-full flex justify-center">
               <DecryptText text="SADEW JAY" delay={300} duration={2500} />
             </h1>
             
