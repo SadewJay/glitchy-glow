@@ -1,13 +1,11 @@
 import { useState, useEffect } from "react";
 import { Terminal } from "@/components/Terminal";
 import { StatusBadge, ViewCounter, SystemStatus, EncryptionStatus } from "@/components/StatusBadge";
-import { StatsGrid } from "@/components/StatsCard";
 import { CornerBrackets } from "@/components/CornerBrackets";
 import { HeroButton } from "@/components/HeroButton";
 import { ScanlineOverlay } from "@/components/ScanlineOverlay";
 import { DecryptText } from "@/components/DecryptText";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { ChevronDown } from "lucide-react";
 
 const Index = () => {
   const [viewCount, setViewCount] = useState(86);
@@ -56,7 +54,7 @@ const Index = () => {
             
             {/* Main title */}
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-display font-black text-primary text-glow-primary tracking-wider">
-              <DecryptText text="PERCYSIX9" delay={300} duration={2500} />
+              <DecryptText text="SADEW JAY" delay={300} duration={2500} />
             </h1>
             
             {/* Tagline */}
@@ -76,18 +74,6 @@ const Index = () => {
           </div>
         </main>
         
-        {/* Stats Section */}
-        <section className="mt-auto">
-          <StatsGrid />
-          
-          {/* Scroll indicator */}
-          <div className="flex flex-col items-center py-6 gap-2">
-            <span className="text-xs tracking-widest text-foreground/60 uppercase">
-              Scroll to decrypt
-            </span>
-            <ChevronDown className="w-5 h-5 text-muted-foreground animate-bounce" />
-          </div>
-        </section>
       </div>
       </div>
     </>
