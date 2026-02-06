@@ -49,16 +49,17 @@ export const SpotifyWidget = () => {
         {/* Spotify Embed */}
         <div 
           className="transition-all duration-300 overflow-hidden"
-          style={{ height: isExpanded ? "352px" : "152px" }}
+          style={{ height: isExpanded ? "380px" : "152px" }}
         >
           <iframe
             src="https://open.spotify.com/embed/artist/3aly4xJOy3LVznzvRIvFYC?utm_source=generator&theme=0"
             width="300"
-            height={isExpanded ? "352" : "152"}
+            height={isExpanded ? 380 : 152}
             frameBorder="0"
+            allowFullScreen
             allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
             loading="lazy"
-            className="rounded-b-lg"
+            style={{ borderRadius: "0 0 12px 12px" }}
           />
         </div>
       </div>
