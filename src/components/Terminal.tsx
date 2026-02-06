@@ -34,49 +34,60 @@ const terminalLines = [
    }
  };
  
- export const Terminal = () => {
-   const [displayedLines, setDisplayedLines] = useState<typeof terminalLines>([]);
-   const [currentLineIndex, setCurrentLineIndex] = useState(0);
-   const [currentText, setCurrentText] = useState("");
-   const [showCursor, setShowCursor] = useState(true);
-   const [isBooted, setIsBooted] = useState(false);
-   const terminalRef = useRef<HTMLDivElement>(null);
-   const contentRef = useRef<HTMLDivElement>(null);
- 
-   useEffect(() => {
-     const cursorInterval = setInterval(() => {
-       setShowCursor((prev) => !prev);
-     }, 530);
-     return () => clearInterval(cursorInterval);
-   }, []);
- 
-   useEffect(() => {
-     const timeout = setTimeout(() => setIsBooted(true), 100);
-     return () => clearTimeout(timeout);
-   }, []);
- 
-   useEffect(() => {
-     if (!isBooted || currentLineIndex >= terminalLines.length) return;
- 
-     const currentFullLine = terminalLines[currentLineIndex].text;
- 
-     if (currentText.length < currentFullLine.length) {
-       const timeout = setTimeout(() => {
-         setCurrentText(currentFullLine.slice(0, currentText.length + 1));
-       }, 18 + Math.random() * 12);
-       return () => clearTimeout(timeout);
-     } else {
-       const timeout = setTimeout(() => {
-         setDisplayedLines((prev) => [...prev, terminalLines[currentLineIndex]]);
-         setCurrentText("");
-         setCurrentLineIndex((prev) => prev + 1);
-         if (contentRef.current) {
-           contentRef.current.scrollTop = contentRef.current.scrollHeight;
-         }
-       }, 250);
-       return () => clearTimeout(timeout);
-     }
-   }, [currentText, currentLineIndex, isBooted]);
+export const Terminal = () => {
+  const [currentText, setCurrentText] = useState("");
+  const [showCursor, setShowCursor] = useState(true);
+  const [isBooted, setIsBooted] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const terminalRef = useRef<HTMLDivElement>(null);
+
+  const fullText = "new chapter loading...";
+
+  useEffect(() => {
+    const cursorInterval = setInterval(() => {
+      setShowCursor((prev) => !prev);
+    }, 530);
+    return () => clearInterval(cursorInterval);
+  }, []);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setIsBooted(true), 100);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  useEffect(() => {
+    if (!isBooted) return;
+
+    if (!isDeleting) {
+      // Typing
+      if (currentText.length < fullText.length) {
+        const timeout = setTimeout(() => {
+          setCurrentText(fullText.slice(0, currentText.length + 1));
+        }, 80 + Math.random() * 40);
+        return () => clearTimeout(timeout);
+      } else {
+        // Pause at end, then start deleting
+        const timeout = setTimeout(() => {
+          setIsDeleting(true);
+        }, 2000);
+        return () => clearTimeout(timeout);
+      }
+    } else {
+      // Deleting
+      if (currentText.length > 0) {
+        const timeout = setTimeout(() => {
+          setCurrentText(currentText.slice(0, -1));
+        }, 40);
+        return () => clearTimeout(timeout);
+      } else {
+        // Pause at start, then start typing again
+        const timeout = setTimeout(() => {
+          setIsDeleting(false);
+        }, 500);
+        return () => clearTimeout(timeout);
+      }
+    }
+  }, [currentText, isBooted, isDeleting]);
  
    return (
      <div className="w-full max-w-2xl mx-auto">
@@ -94,39 +105,25 @@ const terminalLines = [
           </span>
          </div>
  
-         {/* Terminal content */}
-         <div
-           ref={contentRef}
+        {/* Terminal content */}
+        <div
           className="p-4 font-mono text-xs md:text-sm bg-black/60 overflow-hidden transition-all duration-300 ease-out"
-          style={{
-            minHeight: displayedLines.length === 0 && currentLineIndex === 0 ? "40px" : undefined,
-            maxHeight: "300px",
-          }}
-         >
-           {displayedLines.map((line, index) => (
-            <div key={index} className="flex items-start gap-2 mb-1 leading-relaxed animate-line-in">
-               <span className="mt-0.5 flex-shrink-0 w-4 text-center">
-                 {getPrefix(line.type)}
-               </span>
-               <span className={getLineStyle(line.type)}>{line.text}</span>
-             </div>
-           ))}
-           {currentLineIndex < terminalLines.length && (
-             <div className="flex items-start gap-2">
-               <span className="mt-0.5 flex-shrink-0 w-4 text-center">
-                 {getPrefix(terminalLines[currentLineIndex].type)}
-               </span>
-               <span className={getLineStyle(terminalLines[currentLineIndex].type)}>
-                 {currentText}
-                 <span
-                   className="inline-block w-1.5 h-3.5 bg-accent ml-0.5 align-middle"
-                   style={{ opacity: showCursor ? 1 : 0 }}
-                 />
-               </span>
-             </div>
-           )}
-         </div>
-       </div>
-     </div>
-   );
- };
+          style={{ minHeight: "40px" }}
+        >
+          <div className="flex items-start gap-2">
+            <span className="mt-0.5 flex-shrink-0 w-4 text-center">
+              {getPrefix("highlight")}
+            </span>
+            <span className={getLineStyle("highlight")}>
+              {currentText}
+              <span
+                className="inline-block w-1.5 h-3.5 bg-accent ml-0.5 align-middle"
+                style={{ opacity: showCursor ? 1 : 0 }}
+              />
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
