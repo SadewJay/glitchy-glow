@@ -6,7 +6,6 @@ import { HeroButton } from "@/components/HeroButton";
 import { ScanlineOverlay } from "@/components/ScanlineOverlay";
 import { DecryptText } from "@/components/DecryptText";
 import { LoadingScreen } from "@/components/LoadingScreen";
-import { F1Car3D } from "@/components/F1Car3D";
 
 const Index = () => {
   const [viewCount, setViewCount] = useState(86);
@@ -25,9 +24,6 @@ const Index = () => {
       {isLoading && <LoadingScreen onComplete={() => setIsLoading(false)} />}
       
       <div className={`relative min-h-screen bg-background overflow-hidden transition-opacity duration-500 ${isLoading ? 'opacity-0' : 'opacity-100'}`}>
-      {/* 3D F1 Car Background */}
-      <F1Car3D />
-      
       {/* Background grid */}
       <div className="fixed inset-0 grid-background opacity-30" />
       
