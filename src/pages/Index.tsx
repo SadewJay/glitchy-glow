@@ -6,6 +6,7 @@ import { HeroButton } from "@/components/HeroButton";
 import { ScanlineOverlay } from "@/components/ScanlineOverlay";
 import { DecryptText } from "@/components/DecryptText";
 import { LoadingScreen } from "@/components/LoadingScreen";
+import { SpotifyWidget } from "@/components/SpotifyWidget";
 
 const Index = () => {
   const [viewCount, setViewCount] = useState(86);
@@ -76,6 +77,9 @@ const Index = () => {
         
       </div>
       </div>
+      
+      {/* Spotify Widget */}
+      <SpotifyWidget />
     </>
   );
 };
