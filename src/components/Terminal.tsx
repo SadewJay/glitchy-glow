@@ -1,17 +1,8 @@
 import { useState, useEffect, useRef } from "react";
  
- const terminalLines = [
-   { type: "system", text: "[SYS] Initializing secure connection..." },
-   { type: "success", text: "[OK] Connection established" },
-   { type: "system", text: "[SYS] Bypassing firewall protocols..." },
-   { type: "warning", text: "[!] Firewall detected - applying countermeasures" },
-   { type: "success", text: "[OK] Firewall bypassed" },
-   { type: "system", text: "[SYS] Encrypting data stream [AES-256]..." },
-   { type: "success", text: "[OK] Encryption active" },
-   { type: "system", text: "[SYS] Establishing anonymous tunnel..." },
-   { type: "success", text: "[OK] TOR circuit complete - 3 nodes" },
-   { type: "highlight", text: ">>> ACCESS GRANTED <<<" },
- ];
+const terminalLines = [
+  { type: "highlight", text: "new chapter loading..." },
+];
  
  const getLineStyle = (type: string) => {
    switch (type) {
@@ -98,9 +89,9 @@ import { useState, useEffect, useRef } from "react";
            <div className="w-2.5 h-2.5 rounded-full bg-destructive" />
            <div className="w-2.5 h-2.5 rounded-full bg-primary" />
            <div className="w-2.5 h-2.5 rounded-full bg-accent" />
-           <span className="ml-2 text-xs text-primary/80 font-bold tracking-wider">
-             novozzo@darknet:~
-           </span>
+          <span className="ml-2 text-xs text-primary/80 font-bold tracking-wider">
+            percysix9@sadewjay.com
+          </span>
          </div>
  
          {/* Terminal content */}
