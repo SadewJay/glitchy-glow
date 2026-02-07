@@ -1,11 +1,11 @@
-import { Instagram, Youtube, Mail, Music } from "lucide-react";
+import { Instagram, Youtube, Mail, Facebook } from "lucide-react";
 
 const socials = [
   {
-    name: "Spotify",
-    icon: Music,
-    url: "https://open.spotify.com/artist/3aly4xJOy3LVznzvRIvFYC",
-    color: "hover:text-[#1DB954] hover:shadow-[0_0_30px_rgba(29,185,84,0.5)]",
+    name: "Facebook",
+    icon: Facebook,
+    url: "https://www.facebook.com/SadewJayawardhanaii/",
+    color: "hover:text-[#1877F2] hover:shadow-[0_0_30px_rgba(24,119,242,0.5)]",
   },
   {
     name: "YouTube",
@@ -16,13 +16,13 @@ const socials = [
   {
     name: "Instagram",
     icon: Instagram,
-    url: "https://instagram.com/sadewjay",
+    url: "https://www.instagram.com/sadew_jayawardhana/",
     color: "hover:text-[#E4405F] hover:shadow-[0_0_30px_rgba(228,64,95,0.5)]",
   },
   {
     name: "Email",
     icon: Mail,
-    url: "mailto:percysix9@sadewjay.com",
+    url: "mailto:sadewprabuddha52@gmail.com",
     color: "hover:text-primary hover:shadow-[0_0_30px_hsl(var(--primary)/0.5)]",
   },
 ];
