@@ -3,7 +3,8 @@ import { ChevronUp, ChevronDown, X } from "lucide-react";
 
 export const SpotifyWidget = () => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(false);
+  const [showEmbed, setShowEmbed] = useState(false);
 
   if (!isVisible) {
     return (
@@ -19,6 +20,20 @@ export const SpotifyWidget = () => {
     );
   }
 
+  const handleToggleEmbed = () => {
+    if (!showEmbed) {
+      setShowEmbed(true);
+    } else {
+      setIsExpanded(!isExpanded);
+    }
+  };
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setShowEmbed(false);
+    setIsExpanded(false);
+  };
+
   return (
     <div className="fixed bottom-4 right-4 z-50 transition-all duration-300">
       <div className="bg-card/95 backdrop-blur-md border border-primary/30 rounded-lg overflow-hidden shadow-2xl box-glow-primary">
@@ -32,13 +47,13 @@ export const SpotifyWidget = () => {
           </div>
           <div className="flex items-center gap-1">
             <button
-              onClick={() => setIsExpanded(!isExpanded)}
+              onClick={handleToggleEmbed}
               className="p-1 hover:bg-muted rounded transition-colors text-muted-foreground hover:text-foreground"
             >
-              {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+              {showEmbed && isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
             </button>
             <button
-              onClick={() => setIsVisible(false)}
+              onClick={handleClose}
               className="p-1 hover:bg-muted rounded transition-colors text-muted-foreground hover:text-foreground"
             >
               <X className="w-4 h-4" />
@@ -47,21 +62,23 @@ export const SpotifyWidget = () => {
         </div>
         
         {/* Spotify Embed */}
-        <div 
-          className="transition-all duration-300 overflow-hidden"
-          style={{ height: isExpanded ? "380px" : "152px" }}
-        >
-          <iframe
-            src="https://open.spotify.com/embed/artist/3aly4xJOy3LVznzvRIvFYC?utm_source=generator&theme=0"
-            width="300"
-            height={isExpanded ? 380 : 152}
-            frameBorder="0"
-            allowFullScreen
-            allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-            loading="lazy"
-            style={{ borderRadius: "0 0 12px 12px" }}
-          />
-        </div>
+        {showEmbed && (
+          <div 
+            className="transition-all duration-300 overflow-hidden"
+            style={{ height: isExpanded ? "380px" : "152px" }}
+          >
+            <iframe
+              src="https://open.spotify.com/embed/artist/3aly4xJOy3LVznzvRIvFYC?utm_source=generator&theme=0"
+              width="300"
+              height={isExpanded ? 380 : 152}
+              frameBorder="0"
+              allowFullScreen
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              style={{ borderRadius: "0 0 12px 12px" }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
