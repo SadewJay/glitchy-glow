@@ -76,7 +76,7 @@ export const SocialsSection = () => {
         <div className="flex items-center justify-center gap-2 pt-8">
           <div className="w-16 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
           <span className="text-xs font-mono text-muted-foreground">
-            SADEW JAY © 2024
+            SADEW JAY © 2026
           </span>
           <div className="w-16 h-px bg-gradient-to-r from-transparent via-primary to-transparent" />
         </div>
