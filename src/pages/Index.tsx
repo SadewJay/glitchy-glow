@@ -7,6 +7,7 @@ import { ScanlineOverlay } from "@/components/ScanlineOverlay";
 import { DecryptText } from "@/components/DecryptText";
 import { SpotifyWidget } from "@/components/SpotifyWidget";
 import { SocialsSection } from "@/components/SocialsSection";
+import { MusicPlayer } from "@/components/MusicPlayer";
 
 const Index = () => {
   const [viewCount, setViewCount] = useState(86);
@@ -90,6 +91,9 @@ const Index = () => {
       
       {/* Spotify Widget */}
       <SpotifyWidget />
+      
+      {/* Background Music Player */}
+      <MusicPlayer />
     </>
   );
 };
