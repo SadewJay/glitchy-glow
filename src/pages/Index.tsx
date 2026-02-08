@@ -8,6 +8,7 @@ import { DecryptText } from "@/components/DecryptText";
 import { SpotifyWidget } from "@/components/SpotifyWidget";
 import { SocialsSection } from "@/components/SocialsSection";
 import { MusicPlayer } from "@/components/MusicPlayer";
+import { MatrixBackground } from "@/components/MatrixBackground";
 
 const Index = () => {
   const [viewCount, setViewCount] = useState(86);
@@ -35,6 +36,7 @@ const Index = () => {
     <>
       <div className={`relative min-h-screen bg-background overflow-hidden transition-all duration-1000 ease-out ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         {/* Background grid */}
+        <MatrixBackground />
         <div className="fixed inset-0 grid-background opacity-30" />
         
         {/* Scan effects */}
