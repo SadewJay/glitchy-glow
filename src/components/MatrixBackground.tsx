@@ -35,12 +35,12 @@ export const MatrixBackground = () => {
 
         // Head character brighter
         ctx.fillStyle = "hsl(50, 100%, 55%)";
-        ctx.globalAlpha = 0.15;
+        ctx.globalAlpha = 0.9;
         ctx.fillText(char, x, y);
 
         // Trail
         ctx.fillStyle = "hsl(120, 100%, 40%)";
-        ctx.globalAlpha = 0.08;
+        ctx.globalAlpha = 0.4;
         ctx.fillText(char, x, y - fontSize);
 
         ctx.globalAlpha = 1;
