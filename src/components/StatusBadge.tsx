@@ -2,7 +2,7 @@
  
  export const StatusBadge = () => {
    return (
-     <div className="flex items-center gap-2 px-4 py-2 border border-border rounded-full bg-card/50 backdrop-blur-sm">
+     <div className="flex items-center justify-center gap-2 px-4 py-2 border border-border rounded-full bg-card/50 backdrop-blur-sm mx-auto w-fit">
        <Shield className="w-4 h-4 text-primary" />
        <span className="text-xs tracking-widest text-muted-foreground uppercase">
          Identity Verified
