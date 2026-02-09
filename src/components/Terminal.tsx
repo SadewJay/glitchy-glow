@@ -10,10 +10,6 @@ const getLineStyle = (type: string) => {
       return "text-primary text-glow-primary";
     case "highlight":
       return "text-secondary text-glow-cyan font-bold";
-    case "label":
-      return "text-muted-foreground";
-    case "value":
-      return "text-primary text-glow-primary font-bold";
     default:
       return "text-foreground";
   }
@@ -34,43 +30,33 @@ const getPrefix = (type: string) => {
   }
 };
 
-const randomBetween = (min: number, max: number) =>
-  Math.floor(Math.random() * (max - min + 1)) + min;
-
-const formatUptime = (seconds: number) => {
-  const d = Math.floor(seconds / 86400);
-  const h = Math.floor((seconds % 86400) / 3600);
-  const m = Math.floor((seconds % 3600) / 60);
-  const s = seconds % 60;
-  return `${d}d ${h.toString().padStart(2, "0")}:${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+const weatherCodeToText = (code: number): { text: string; icon: string } => {
+  if (code === 0) return { text: "Clear sky", icon: "☀" };
+  if (code <= 3) return { text: "Partly cloudy", icon: "⛅" };
+  if (code <= 48) return { text: "Foggy", icon: "🌫" };
+  if (code <= 57) return { text: "Drizzle", icon: "🌦" };
+  if (code <= 67) return { text: "Rain", icon: "🌧" };
+  if (code <= 77) return { text: "Snow", icon: "❄" };
+  if (code <= 82) return { text: "Rain showers", icon: "🌧" };
+  if (code <= 86) return { text: "Snow showers", icon: "🌨" };
+  if (code <= 99) return { text: "Thunderstorm", icon: "⛈" };
+  return { text: "Unknown", icon: "?" };
 };
 
-const makeBar = (percent: number, width = 20) => {
-  const filled = Math.round((percent / 100) * width);
-  const empty = width - filled;
-  const color =
-    percent > 85 ? "text-destructive" : percent > 60 ? "text-primary" : "text-accent";
-  return (
-    <span>
-      <span className="text-muted-foreground">[</span>
-      <span className={color}>{"█".repeat(filled)}</span>
-      <span className="text-muted-foreground/30">{"░".repeat(empty)}</span>
-      <span className="text-muted-foreground">]</span>
-      <span className={`${color} ml-1`}>{percent}%</span>
-    </span>
-  );
-};
+interface WeatherData {
+  temperature: number;
+  humidity: number;
+  windSpeed: number;
+  weatherCode: number;
+}
 
 export const Terminal = () => {
   const [isBooted, setIsBooted] = useState(false);
   const [bootPhase, setBootPhase] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
-  const [cpu, setCpu] = useState(23);
-  const [mem, setMem] = useState(41);
-  const [net, setNet] = useState({ in: 1.2, out: 0.4 });
-  const [uptime, setUptime] = useState(284719);
-  const [processes, setProcesses] = useState(137);
-  const [disk, setDisk] = useState(67);
+  const [dateTime, setDateTime] = useState(new Date());
+  const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [weatherError, setWeatherError] = useState(false);
   const terminalRef = useRef<HTMLDivElement>(null);
 
   // Cursor blink
@@ -92,25 +78,59 @@ export const Terminal = () => {
     return () => timers.forEach(clearTimeout);
   }, []);
 
-  // Live stats updates
+  // Real-time clock (Colombo timezone)
   useEffect(() => {
     if (bootPhase < 5) return;
-    const i = setInterval(() => {
-      setCpu(randomBetween(8, 72));
-      setMem((p) => Math.min(95, Math.max(30, p + randomBetween(-3, 4))));
-      setNet({ in: +(Math.random() * 4 + 0.1).toFixed(1), out: +(Math.random() * 2 + 0.05).toFixed(1) });
-      setUptime((p) => p + 1);
-      setProcesses(randomBetween(130, 155));
-      setDisk((p) => Math.min(89, Math.max(60, p + randomBetween(-1, 1))));
-    }, 1000);
+    const i = setInterval(() => setDateTime(new Date()), 1000);
     return () => clearInterval(i);
   }, [bootPhase]);
+
+  // Fetch weather from Open-Meteo (Colombo: 6.9271°N, 79.8612°E)
+  useEffect(() => {
+    if (bootPhase < 5) return;
+
+    const fetchWeather = async () => {
+      try {
+        const res = await fetch(
+          "https://api.open-meteo.com/v1/forecast?latitude=6.9271&longitude=79.8612&current=temperature_2m,relative_humidity_2m,wind_speed_10m,weather_code&timezone=Asia/Colombo"
+        );
+        const data = await res.json();
+        setWeather({
+          temperature: data.current.temperature_2m,
+          humidity: data.current.relative_humidity_2m,
+          windSpeed: data.current.wind_speed_10m,
+          weatherCode: data.current.weather_code,
+        });
+        setWeatherError(false);
+      } catch {
+        setWeatherError(true);
+      }
+    };
+
+    fetchWeather();
+    const i = setInterval(fetchWeather, 60000); // refresh every minute
+    return () => clearInterval(i);
+  }, [bootPhase]);
+
+  const colomboTime = dateTime.toLocaleString("en-US", {
+    timeZone: "Asia/Colombo",
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  });
+
+  const weatherInfo = weather ? weatherCodeToText(weather.weatherCode) : null;
 
   const bootLines = [
     { phase: 1, prefix: "system", text: "initializing sadewjay_os v3.1.7..." },
     { phase: 2, prefix: "success", text: "kernel modules loaded [OK]" },
     { phase: 3, prefix: "success", text: "network interfaces online [OK]" },
-    { phase: 4, prefix: "highlight", text: "system monitor activated" },
+    { phase: 4, prefix: "highlight", text: "location services activated — Colombo, LK" },
   ];
 
   return (
@@ -125,7 +145,7 @@ export const Terminal = () => {
           <div className="w-2.5 h-2.5 rounded-full bg-primary" />
           <div className="w-2.5 h-2.5 rounded-full bg-accent" />
           <span className="ml-2 text-xs text-primary/80 font-bold tracking-wider">
-            system_monitor — percysix9@sadewjay
+            terminal — percysix9@sadewjay
           </span>
         </div>
 
@@ -144,34 +164,70 @@ export const Terminal = () => {
               )
           )}
 
-          {/* Live monitor */}
+          {/* Date/Time & Weather */}
           {bootPhase >= 5 && (
-            <div className="mt-3 pt-3 border-t border-primary/20 space-y-1.5 animate-line-in">
+            <div className="mt-3 pt-3 border-t border-primary/20 space-y-2 animate-line-in">
+              {/* Date & Time */}
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground w-12">CPU</span>
-                {makeBar(cpu)}
+                <span className="text-muted-foreground w-14">TIME</span>
+                <span className="text-primary text-glow-primary font-bold tracking-wide">
+                  {colomboTime}
+                </span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-muted-foreground w-12">MEM</span>
-                {makeBar(mem)}
+                <span className="text-muted-foreground w-14">ZONE</span>
+                <span className="text-foreground/80">Asia/Colombo (UTC+5:30)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="text-muted-foreground w-12">DISK</span>
-                {makeBar(disk)}
+
+              {/* Weather */}
+              <div className="mt-2 pt-2 border-t border-primary/10 space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground w-14">LOC</span>
+                  <span className="text-secondary text-glow-cyan">Colombo, Sri Lanka</span>
+                </div>
+
+                {weatherError && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground w-14">WX</span>
+                    <span className="text-destructive">⚠ weather data unavailable</span>
+                  </div>
+                )}
+
+                {weatherInfo && weather && (
+                  <>
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground w-14">WX</span>
+                      <span className="text-primary text-glow-primary text-lg leading-none mr-1">
+                        {weatherInfo.icon}
+                      </span>
+                      <span className="text-foreground/90">{weatherInfo.text}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground w-14">TEMP</span>
+                      <span className="text-primary text-glow-primary font-bold">
+                        {weather.temperature}°C
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground w-14">HUM</span>
+                      <span className="text-accent">{weather.humidity}%</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-muted-foreground w-14">WIND</span>
+                      <span className="text-foreground/80">{weather.windSpeed} km/h</span>
+                    </div>
+                  </>
+                )}
+
+                {!weather && !weatherError && (
+                  <div className="flex items-center gap-2">
+                    <span className="text-muted-foreground w-14">WX</span>
+                    <span className="text-muted-foreground animate-pulse">fetching weather data...</span>
+                  </div>
+                )}
               </div>
-              <div className="flex items-center gap-2 mt-2 text-muted-foreground">
-                <span className="w-12">NET</span>
-                <span className="text-accent">↓ {net.in} MB/s</span>
-                <span className="text-primary ml-2">↑ {net.out} MB/s</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="w-12">PROC</span>
-                <span className="text-foreground/80">{processes} active</span>
-              </div>
-              <div className="flex items-center gap-2 text-muted-foreground">
-                <span className="w-12">UP</span>
-                <span className="text-secondary text-glow-cyan">{formatUptime(uptime)}</span>
-              </div>
+
+              {/* Prompt */}
               <div className="flex items-center gap-2 mt-2">
                 <span className="text-accent">❯</span>
                 <span className="text-foreground/60">_</span>
