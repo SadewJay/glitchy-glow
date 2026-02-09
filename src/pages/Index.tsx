@@ -71,7 +71,7 @@ const Index = () => {
               
               {/* Tagline */}
               <p className="text-lg md:text-xl text-foreground/80 tracking-[0.3em] uppercase">
-                "<span className="text-primary/90 font-semibold">Nothing is true everything is permitted</span>"
+                "<span className="text-primary/90 font-semibold"><DecryptText text="Nothing is true everything is permitted" delay={2800} duration={2500} /></span>"
               </p>
               
               {/* Terminal */}
