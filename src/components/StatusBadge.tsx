@@ -9,7 +9,7 @@
        </span>
        <span className="text-muted-foreground">•</span>
        <span className="text-xs tracking-widest text-foreground uppercase">
-         Clearance: Black
+         Clearance: Classified
        </span>
        <Shield className="w-4 h-4 text-primary" />
      </div>
