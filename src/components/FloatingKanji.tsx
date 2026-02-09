@@ -5,14 +5,12 @@ const KANJI = "アイウエオカキクケコサシスセソタチツテトナ�
 interface Particle {
   x: number;
   y: number;
-  baseX: number;
-  baseY: number;
   vx: number;
   vy: number;
   char: string;
   size: number;
   opacity: number;
-  speed: number;
+  drift: number;
 }
 
 export const FloatingKanji = () => {
@@ -29,24 +27,22 @@ export const FloatingKanji = () => {
 
     const resize = () => {
       canvas.width = window.innerWidth;
-      canvas.height = document.documentElement.scrollHeight;
+      canvas.height = window.innerHeight;
       initParticles();
     };
 
     const initParticles = () => {
-      const count = Math.floor((canvas.width * canvas.height) / 25000);
-      particlesRef.current = Array.from({ length: Math.min(count, 80) }, () => {
-        const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height;
-        return {
-          x, y, baseX: x, baseY: y,
-          vx: 0, vy: 0,
-          char: KANJI[Math.floor(Math.random() * KANJI.length)],
-          size: 12 + Math.random() * 14,
-          opacity: 0.03 + Math.random() * 0.06,
-          speed: 0.2 + Math.random() * 0.5,
-        };
-      });
+      const count = Math.floor((canvas.width * canvas.height) / 20000);
+      particlesRef.current = Array.from({ length: Math.min(count, 60) }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: 0,
+        vy: 0,
+        char: KANJI[Math.floor(Math.random() * KANJI.length)],
+        size: 14 + Math.random() * 16,
+        opacity: 0.04 + Math.random() * 0.07,
+        drift: (Math.random() - 0.5) * 0.3,
+      }));
     };
 
     const animate = () => {
@@ -58,29 +54,30 @@ export const FloatingKanji = () => {
         const dx = p.x - mx;
         const dy = p.y - my;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const radius = 150;
+        const radius = 160;
 
-        if (dist < radius) {
+        if (dist < radius && dist > 0) {
           const force = (radius - dist) / radius;
-          p.vx += (dx / dist) * force * 2;
-          p.vy += (dy / dist) * force * 2;
+          p.vx += (dx / dist) * force * 3;
+          p.vy += (dy / dist) * force * 3;
         }
 
-        // drift back to base
-        p.vx += (p.baseX - p.x) * 0.005;
-        p.vy += (p.baseY - p.y) * 0.005;
+        // gentle upward float + horizontal drift
+        p.vy -= 0.02;
+        p.vx += p.drift * 0.01;
 
-        // gentle float
-        p.baseY -= p.speed * 0.1;
-        if (p.baseY < -20) {
-          p.baseY = canvas.height + 20;
-          p.y = p.baseY;
-        }
+        // damping
+        p.vx *= 0.96;
+        p.vy *= 0.96;
 
-        p.vx *= 0.95;
-        p.vy *= 0.95;
         p.x += p.vx;
         p.y += p.vy;
+
+        // wrap around edges
+        if (p.y < -30) { p.y = canvas.height + 30; }
+        if (p.y > canvas.height + 30) { p.y = -30; }
+        if (p.x < -30) { p.x = canvas.width + 30; }
+        if (p.x > canvas.width + 30) { p.x = -30; }
 
         ctx.font = `${p.size}px "JetBrains Mono", monospace`;
         ctx.fillStyle = `hsla(50, 100%, 55%, ${p.opacity})`;
@@ -91,7 +88,7 @@ export const FloatingKanji = () => {
     };
 
     const handleMouse = (e: MouseEvent) => {
-      mouseRef.current = { x: e.clientX, y: e.clientY + window.scrollY };
+      mouseRef.current = { x: e.clientX, y: e.clientY };
     };
 
     window.addEventListener("resize", resize);
@@ -109,8 +106,8 @@ export const FloatingKanji = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed inset-0 pointer-events-none z-[1]"
-      style={{ width: "100%", height: "100%" }}
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: 1 }}
     />
   );
 };
