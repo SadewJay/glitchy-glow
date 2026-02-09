@@ -127,7 +127,7 @@ export const Terminal = () => {
   const weatherInfo = weather ? weatherCodeToText(weather.weatherCode) : null;
 
   const bootLines = [
-    { phase: 1, prefix: "system", text: "initializing sadewjay_os v3.1.7..." },
+    { phase: 1, prefix: "system", text: "initializing ubetatta_os v6.69..." },
     { phase: 2, prefix: "success", text: "kernel modules loaded [OK]" },
     { phase: 3, prefix: "success", text: "network interfaces online [OK]" },
     { phase: 4, prefix: "highlight", text: "location services activated — Colombo, LK" },
